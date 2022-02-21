@@ -13,15 +13,27 @@ class ParkingListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Text(
-        status,
-        style: TextStyle(
-          color: available ? Colors.green : Colors.red,
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.blue,
+          ),
         ),
       ),
-      title: Text(name),
-      onTap: () {},
+      child: ListTile(
+        leading: Text(
+          status,
+          style: TextStyle(
+            color: available ? Colors.green : Colors.red,
+          ),
+        ),
+        title: Text(
+          name,
+          textAlign: TextAlign.right,
+        ),
+        onTap: () {},
+      ),
     );
   }
 }

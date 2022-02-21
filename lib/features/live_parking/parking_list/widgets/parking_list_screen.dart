@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:live_parking_guide/features/live_parking/parking_list/models/parking_list_data.dart';
 import 'package:live_parking_guide/features/live_parking/parking_list/widgets/parking_list_row.dart';
+import 'package:live_parking_guide/services/live_parking_api/parking_list_api.dart';
 
 class ParkingList extends StatelessWidget {
   const ParkingList({Key? key}) : super(key: key);
@@ -19,31 +21,52 @@ class ParkingList extends StatelessWidget {
           ],
         ),
       ),
-      body: _listBuilder(),
+      body: const _ListBuilder(),
     );
   }
 }
 
-class _listBuilder extends StatefulWidget {
-  const _listBuilder({Key? key}) : super(key: key);
+class _ListBuilder extends StatefulWidget {
+  const _ListBuilder({Key? key}) : super(key: key);
 
   @override
-  State<_listBuilder> createState() => _listBuilderState();
+  State<_ListBuilder> createState() => _ListBuilderState();
 }
 
-class _listBuilderState extends State<_listBuilder> {
+class _ListBuilderState extends State<_ListBuilder> {
+  late List<ParkingListData> _parkingList;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    getParkingList();
+  }
+
+  Future<void> getParkingList() async {
+    _parkingList = await ParkingListApi.getParkingList();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: 15,
-      itemBuilder: (context, index) {
-        if (index < 10) {
-          return ParkingListRow(
-              name: 'een parking naam', status: '50/200', available: true);
-        }
-        return Text('Einde lijst');
-      },
-    );
+    return _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: _parkingList.length,
+            itemBuilder: (context, index) {
+              return ParkingListRow(
+                name: _parkingList[index].name,
+                status:
+                    '${_parkingList[index].occupation}/${_parkingList[index].totalCapacity}',
+                available: _parkingList[index].occupation !=
+                    _parkingList[index].totalCapacity,
+              );
+            },
+          );
   }
 }

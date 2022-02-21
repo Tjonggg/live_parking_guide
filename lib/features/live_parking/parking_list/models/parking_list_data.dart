@@ -1,10 +1,10 @@
 class ParkingListData {
   final int occupation;
-  final bool isOpenNow;
+  final int isOpenNow;
   final String description;
   final String name;
   final int totalCapacity;
-  final List<int> location;
+  final List<dynamic> location;
 
   ParkingListData({
     required this.occupation,
@@ -18,11 +18,11 @@ class ParkingListData {
   factory ParkingListData.fromJson(dynamic json) {
     return ParkingListData(
       occupation: json['occupation'] as int,
-      isOpenNow: json['isOpenNow'] as bool,
+      isOpenNow: json['isopennow'] as int,
       description: json['description'] as String,
       name: json['name'] as String,
-      totalCapacity: json['totalCapacity'] as int,
-      location: json['location'] as List<int>,
+      totalCapacity: json['totalcapacity'] as int,
+      location: json['location'] as List<dynamic>,
     );
   }
 
@@ -31,4 +31,9 @@ class ParkingListData {
       return ParkingListData.fromJson(data);
     }).toList();
   }
+
+  // @override
+  // String toString() {
+  //   return 'Parking\n{occupation: $occupation, isOpenNow: $isOpenNow, description: $description, name: $name, totalCapacity: $totalCapacity, location: $location\n}';
+  // }
 }
