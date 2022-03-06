@@ -41,13 +41,13 @@ class _ListBuilderState extends State<_ListBuilder> {
   void initState() {
     super.initState();
 
-    getParkingList();
+    loadParkingList();
   }
 
-  Future<void> getParkingList() async {
+  Future<void> loadParkingList() async {
     _parkingList = await ParkingListApi.getParkingList();
     setState(() {
-      _isLoading = false;
+      _isLoading = false; //TODO: loading check
     });
   }
 
@@ -64,7 +64,8 @@ class _ListBuilderState extends State<_ListBuilder> {
                 status:
                     '${_parkingList[index].occupation}/${_parkingList[index].totalCapacity}',
                 available: _parkingList[index].occupation !=
-                    _parkingList[index].totalCapacity,
+                    _parkingList[index]
+                        .totalCapacity, //TODO: kleur heeft nog geen state
               );
             },
           );
