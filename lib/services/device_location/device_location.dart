@@ -4,9 +4,8 @@ import 'package:permission_handler/permission_handler.dart';
 class DeviceLocation {
   //TODO: stream voor locatie bepaling of plaatsen beschikbaar? provider en changenotifier/listener
   Future<Position?> getCurrentPosition() async {
-    Position? _position = null;
-    //final permissionStatus = await Permission.location.status;
-    final permissionStatus = PermissionStatus.denied;
+    Position? _position;
+    final permissionStatus = await Permission.location.status;
 
     if (!permissionStatus.isGranted) {
       await Permission.locationWhenInUse.request();
