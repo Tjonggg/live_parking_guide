@@ -8,6 +8,7 @@ class ParkingListRow extends StatelessWidget {
   final bool available;
   final ParkingListData details;
 
+  // ignore: use_key_in_widget_constructors
   const ParkingListRow({
     required this.name,
     required this.status,

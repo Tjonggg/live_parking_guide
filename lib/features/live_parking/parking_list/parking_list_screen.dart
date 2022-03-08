@@ -64,14 +64,14 @@ class _ListBuilderState extends State<_ListBuilder> {
       _isLoading = false;
     });
 
-    startPosition = await DeviceLocation()
-        .getCurrentPosition(); //TODO: dit klopt denk ik niet
+    startPosition =
+        await DeviceLocation().getCurrentPosition(); //TODO: dit kan beter
     if (startPosition != null) {
       double _distance;
       _positionStream.listen((position) {
         _distance = Geolocator.distanceBetween(startPosition!.latitude,
             startPosition!.longitude, position.latitude, position.longitude);
-        if (_distance > 2) {
+        if (_distance > 10) {
           setState(() {
             _isLoading = true;
           });
@@ -87,7 +87,6 @@ class _ListBuilderState extends State<_ListBuilder> {
       _isLoading = false;
     });
     startPosition = position;
-    print('Refresh done');
   }
 
   @override

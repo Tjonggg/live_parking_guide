@@ -41,7 +41,7 @@ class ParkingDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 250,
               child: GoogleMap(
                 markers: Set<Marker>.of(_markers),
