@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:live_parking_guide/features/live_parking/models/parking_list_data.dart';
+import 'package:live_parking_guide/features/live_parking/parking_detail/parking_details_screen.dart';
 
 class ParkingListRow extends StatelessWidget {
   final String name;
   final String status;
   final bool available;
+  final ParkingListData details;
 
   const ParkingListRow({
     required this.name,
     required this.status,
     required this.available,
+    required this.details,
   });
 
   @override
@@ -32,7 +36,10 @@ class ParkingListRow extends StatelessWidget {
           name,
           textAlign: TextAlign.right,
         ),
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(context, ParkingDetailsScreen.id,
+              arguments: details);
+        },
       ),
     );
   }

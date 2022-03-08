@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:live_parking_guide/features/live_parking/parking_list/widgets/parking_list_screen.dart';
+import 'package:live_parking_guide/features/live_parking/parking_detail/parking_details_screen.dart';
+import 'package:live_parking_guide/features/live_parking/parking_list/parking_list_screen.dart';
 
 //TODO: add theme
 //https://itnext.io/best-folder-structure-for-your-next-project-a0d18ad1483a folder checken, changenotifier/listener
@@ -18,7 +19,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ParkingList(),
+      home: const ParkingListScreen(),
+      routes: {
+        ParkingListScreen.id: (context) => const ParkingListScreen(),
+        ParkingDetailsScreen.id: (context) => const ParkingDetailsScreen(),
+      },
+      initialRoute: ParkingListScreen.id,
     );
   }
 }

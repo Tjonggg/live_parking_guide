@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ParkingListData {
   final int occupation;
   final int isOpenNow;
@@ -5,6 +7,7 @@ class ParkingListData {
   final String name;
   final int totalCapacity;
   final List<dynamic> location;
+  final Map<String, dynamic> details;
 
   ParkingListData({
     required this.occupation,
@@ -13,9 +16,12 @@ class ParkingListData {
     required this.name,
     required this.totalCapacity,
     required this.location,
+    required this.details,
   });
 
   factory ParkingListData.fromJson(dynamic json) {
+    Map<String, dynamic> _details =
+        jsonDecode(json['locationanddimension'] as String);
     return ParkingListData(
       occupation: json['occupation'] as int,
       isOpenNow: json['isopennow'] as int,
@@ -23,6 +29,7 @@ class ParkingListData {
       name: json['name'] as String,
       totalCapacity: json['totalcapacity'] as int,
       location: json['location'] as List<dynamic>,
+      details: _details,
     );
   }
 

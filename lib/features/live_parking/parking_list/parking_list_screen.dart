@@ -2,15 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:live_parking_guide/features/live_parking/parking_list/models/parking_list_data.dart';
+import 'package:live_parking_guide/features/live_parking/models/parking_list_data.dart';
 import 'package:live_parking_guide/features/live_parking/parking_list/widgets/parking_list_row.dart';
 import 'package:live_parking_guide/services/device_location/device_location.dart';
 import 'package:live_parking_guide/services/live_parking_api/parking_list_api.dart';
 
 //TODO: stop timer en locatie listener
 //TODO: rood/groen kleur heeft nog geen state
-class ParkingList extends StatelessWidget {
-  const ParkingList({Key? key}) : super(key: key);
+class ParkingListScreen extends StatelessWidget {
+  static const String id = 'Parking_list_screen';
+  const ParkingListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +54,10 @@ class _ListBuilderState extends State<_ListBuilder> {
     startParkingList();
   }
 
+  // void dispose() {
+  //   _positionStream
+  // }
+
   Future<void> startParkingList() async {
     _parkingList = await ParkingListApi().startParkingList();
     setState(() {
@@ -66,8 +71,7 @@ class _ListBuilderState extends State<_ListBuilder> {
       _positionStream.listen((position) {
         _distance = Geolocator.distanceBetween(startPosition!.latitude,
             startPosition!.longitude, position.latitude, position.longitude);
-        print('$_distance');
-        if (_distance > 10) {
+        if (_distance > 2) {
           setState(() {
             _isLoading = true;
           });
@@ -83,6 +87,7 @@ class _ListBuilderState extends State<_ListBuilder> {
       _isLoading = false;
     });
     startPosition = position;
+    print('Refresh done');
   }
 
   @override
@@ -99,6 +104,7 @@ class _ListBuilderState extends State<_ListBuilder> {
                     '${_parkingList[index].occupation}/${_parkingList[index].totalCapacity}',
                 available: _parkingList[index].occupation !=
                     _parkingList[index].totalCapacity,
+                details: _parkingList[index],
               );
             },
           );
