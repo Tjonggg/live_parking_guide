@@ -5,15 +5,23 @@ import 'package:live_parking_guide/features/live_parking/models/parking_list_dat
 import 'package:live_parking_guide/services/device_location/device_location.dart';
 
 class ParkingListApi {
-  Future<List<ParkingListData>> requestParkingList() async {
+  Future<List<ParkingListData>> requestParkingList(
+      {Position? refreshPosition}) async {
     final Position? _position = await DeviceLocation().getCurrentPosition();
-    late Uri uri;
+    late Uri _uri;
+    double? _latitude;
+    double? _longitude;
 
-    if (_position != null) {
-      final latitude = _position.latitude;
-      final longitude = _position.longitude;
+    if (refreshPosition != null) {
+      _latitude = refreshPosition.latitude;
+      _longitude = refreshPosition.longitude;
+    } else if (_position != null) {
+      _latitude = _position.latitude;
+      _longitude = _position.longitude;
+    }
 
-      uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
+    if (_latitude != null && _longitude != null) {
+      _uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
         "dataset": "bezetting-parkeergarages-real-time",
         "rows": "20",
         "start": "0",
@@ -21,13 +29,13 @@ class ParkingListApi {
         "geofilter.distance": [
           "51.040271, 3.724234, 5000"
         ], //TODO: testing only, delete at the end
-        //"geofilter.distance": ["$latitude, $longitude, 5000"],
+        //"geofilter.distance": ["$_latitude, $_longitude, 5000"],
         "timezone": "UTC"
       });
 
-      return apiRequest(uri: uri, locationEnabled: true);
+      return await apiRequest(uri: _uri, locationEnabled: true);
     } else {
-      uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
+      _uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
         "dataset": "bezetting-parkeergarages-real-time",
         "rows": "20",
         "start": "0",
@@ -35,26 +43,8 @@ class ParkingListApi {
         "timezone": "UTC"
       });
 
-      return apiRequest(uri: uri, locationEnabled: false);
+      return await apiRequest(uri: _uri, locationEnabled: false);
     }
-  }
-
-  Future<List<ParkingListData>> refreshParkingList(Position position) async {
-    final uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
-      "dataset": "bezetting-parkeergarages-real-time",
-      "rows": "20",
-      "start": "0",
-      "format": "json",
-      "geofilter.distance": [
-        "51.040271, 3.724234, 5000"
-      ], //TODO: testing only, delete at the end
-      // "geofilter.distance": [
-      //   "${position.latitude}, ${position.longitude}, 5000"
-      // ],
-      "timezone": "UTC"
-    });
-
-    return apiRequest(uri: uri, locationEnabled: true);
   }
 
   Future<List<ParkingListData>> apiRequest(

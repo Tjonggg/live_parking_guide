@@ -54,10 +54,6 @@ class _ListBuilderState extends State<_ListBuilder> {
     _startParkingList();
   }
 
-  // void dispose() {
-  //   _positionStream
-  // }
-
   Future<void> _startParkingList() async {
     await _getParkingList();
 
@@ -68,29 +64,27 @@ class _ListBuilderState extends State<_ListBuilder> {
       _positionStream.listen((position) {
         _distance = Geolocator.distanceBetween(_startPosition!.latitude,
             _startPosition!.longitude, position.latitude, position.longitude);
-        if (_distance > 10) {
-          _getRefreshParkingList(position);
+        print(_distance);
+        if (_distance > 2) {
+          _getParkingList(position: position);
         }
       });
     }
   }
 
-  Future<void> _getRefreshParkingList(Position position) async {
+  Future<void> _getParkingList({Position? position}) async {
     setState(() {
       _isLoading = true;
     });
-    _parkingList = await ParkingListApi().refreshParkingList(position);
-    setState(() {
-      _isLoading = false;
-    });
-    _startPosition = position;
-  }
-
-  Future<void> _getParkingList() async {
-    setState(() {
-      _isLoading = true;
-    });
-    _parkingList = await ParkingListApi().requestParkingList();
+    if (position != null) {
+      _parkingList =
+          await ParkingListApi().requestParkingList(refreshPosition: position);
+      _startPosition = position;
+      print('Refresh done');
+    } else {
+      _parkingList = await ParkingListApi().requestParkingList();
+      print('Normal request');
+    }
     setState(() {
       _isLoading = false;
     });
