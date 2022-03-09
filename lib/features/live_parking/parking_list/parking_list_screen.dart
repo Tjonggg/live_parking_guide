@@ -43,7 +43,7 @@ class _ListBuilder extends StatefulWidget {
 class _ListBuilderState extends State<_ListBuilder> {
   List<ParkingListData> _parkingList = [];
   bool _isLoading = true;
-  Position? startPosition;
+  Position? _startPosition;
 
   final Stream<Position> _positionStream = Geolocator.getPositionStream();
 
@@ -51,23 +51,23 @@ class _ListBuilderState extends State<_ListBuilder> {
   void initState() {
     super.initState();
 
-    startParkingList();
+    _startParkingList();
   }
 
   // void dispose() {
   //   _positionStream
   // }
 
-  Future<void> startParkingList() async {
+  Future<void> _startParkingList() async {
     await _getParkingList();
 
-    startPosition =
+    _startPosition =
         await DeviceLocation().getCurrentPosition(); //TODO: dit kan beter
-    if (startPosition != null) {
+    if (_startPosition != null) {
       double _distance;
       _positionStream.listen((position) {
-        _distance = Geolocator.distanceBetween(startPosition!.latitude,
-            startPosition!.longitude, position.latitude, position.longitude);
+        _distance = Geolocator.distanceBetween(_startPosition!.latitude,
+            _startPosition!.longitude, position.latitude, position.longitude);
         if (_distance > 10) {
           _getRefreshParkingList(position);
         }
@@ -83,7 +83,7 @@ class _ListBuilderState extends State<_ListBuilder> {
     setState(() {
       _isLoading = false;
     });
-    startPosition = position;
+    _startPosition = position;
   }
 
   Future<void> _getParkingList() async {
