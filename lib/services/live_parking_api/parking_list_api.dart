@@ -5,7 +5,7 @@ import 'package:live_parking_guide/features/live_parking/models/parking_list_dat
 import 'package:live_parking_guide/services/device_location/device_location.dart';
 
 class ParkingListApi {
-  Future<List<ParkingListData>> startParkingList() async {
+  Future<List<ParkingListData>> requestParkingList() async {
     final Position? _position = await DeviceLocation().getCurrentPosition();
     late Uri uri;
 
@@ -39,7 +39,7 @@ class ParkingListApi {
     }
   }
 
-  Future<List<ParkingListData>> requestParkingList(Position position) async {
+  Future<List<ParkingListData>> refreshParkingList(Position position) async {
     final uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
       "dataset": "bezetting-parkeergarages-real-time",
       "rows": "20",
