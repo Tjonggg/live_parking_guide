@@ -12,47 +12,20 @@ class ParkingListController extends ChangeNotifier {
 
   Future<void> initParkingList() async {
     _parkingList = await ParkingListApi().requestParkingList();
-    notifyListeners();
     _refreshParkingList();
+    notifyListeners();
   }
 
   void _refreshParkingList() {
     //TODO: add timer refresh
     _deviceLocationProvider.addListener(() async {
-      print('We krijgen iets binnen');
       if (_deviceLocationProvider.position != null) {
         _parkingList = await ParkingListApi().requestParkingList(
             refreshPosition: _deviceLocationProvider.position);
         notifyListeners();
-      } else {
-        _parkingList = await ParkingListApi().requestParkingList();
-        notifyListeners();
-        print('Start lijst');
       }
     });
 
     _deviceLocationProvider.initDeviceLocationProvider();
   }
-
-  //await Future<void>.delayed(const Duration(seconds: 3));
-  // Future<void> _getParkingList({Position? position}) async {
-  //   if (position != null) {
-  //     // _positionStreamSubscription.pause();
-  //     _startPosition = position;
-  //     _parkingList =
-  //         await ParkingListApi().requestParkingList(refreshPosition: position);
-  //     _parkingListStreamController.add(_parkingList);
-  //     print('Refresh done $_startPosition');
-  //     //_startListRefresh();
-  //   } else {
-  //     _parkingList = await ParkingListApi().requestParkingList();
-  //     _parkingListStreamController.add(_parkingList);
-  //     print('Init list');
-  //   }
-  // }
-
-  // @override
-  // String toString() {
-  //   return '\nPrivate: $_private\nPublic: $public';
-  // }
 }

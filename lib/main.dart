@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:live_parking_guide/features/live_parking/parking_detail/parking_details_screen.dart';
 import 'package:live_parking_guide/features/live_parking/parking_list/parking_list_screen.dart';
 
-//TODO: add theme
-//https://itnext.io/best-folder-structure-for-your-next-project-a0d18ad1483a folder checken, changenotifier/listener
+//TODO: NICE TO HAVE: hide apikey(+android key), add theme(tablet support), UT's
 void main() {
   runApp(const MyApp());
 }

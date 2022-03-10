@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:live_parking_guide/features/live_parking/models/parking_list_data.dart';
-import 'package:live_parking_guide/services/device_location_provider/device_location_provider.dart';
 
 class ParkingListApi {
   Future<List<ParkingListData>> requestParkingList(
