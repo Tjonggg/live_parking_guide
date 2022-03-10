@@ -38,9 +38,4 @@ class ParkingListData {
       return ParkingListData.fromJson(data);
     }).toList();
   }
-
-  // @override
-  // String toString() {
-  //   return 'Parking\n{occupation: $occupation, isOpenNow: $isOpenNow, description: $description, name: $name, totalCapacity: $totalCapacity, location: $location\n}';
-  // }
 }

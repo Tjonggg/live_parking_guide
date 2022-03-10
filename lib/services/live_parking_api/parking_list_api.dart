@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:live_parking_guide/features/live_parking/models/parking_list_data.dart';
-import 'package:live_parking_guide/services/device_location/device_location.dart';
+import 'package:live_parking_guide/services/device_location_provider/device_location_provider.dart';
 
 class ParkingListApi {
   Future<List<ParkingListData>> requestParkingList(
       {Position? refreshPosition}) async {
-    final Position? _position = await DeviceLocation().getCurrentPosition();
     late Uri _uri;
     double? _latitude;
     double? _longitude;
@@ -15,9 +14,6 @@ class ParkingListApi {
     if (refreshPosition != null) {
       _latitude = refreshPosition.latitude;
       _longitude = refreshPosition.longitude;
-    } else if (_position != null) {
-      _latitude = _position.latitude;
-      _longitude = _position.longitude;
     }
 
     if (_latitude != null && _longitude != null) {
@@ -33,7 +29,7 @@ class ParkingListApi {
         "timezone": "UTC"
       });
 
-      return await apiRequest(uri: _uri, locationEnabled: true);
+      return await _apiRequest(uri: _uri, locationEnabled: true);
     } else {
       _uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
         "dataset": "bezetting-parkeergarages-real-time",
@@ -43,19 +39,19 @@ class ParkingListApi {
         "timezone": "UTC"
       });
 
-      return await apiRequest(uri: _uri, locationEnabled: false);
+      return await _apiRequest(uri: _uri, locationEnabled: false);
     }
   }
 
-  Future<List<ParkingListData>> apiRequest(
+  Future<List<ParkingListData>> _apiRequest(
       {required Uri uri, required bool locationEnabled}) async {
-    final response = await http.get(uri);
+    final _response = await http.get(uri);
 
-    if (response.statusCode == 200) {
-      Map data = jsonDecode(response.body);
+    if (_response.statusCode == 200) {
+      Map _data = jsonDecode(_response.body);
       List _temp = [];
 
-      for (var i in data['records']) {
+      for (var i in _data['records']) {
         _temp.add(i['fields']);
       }
 
