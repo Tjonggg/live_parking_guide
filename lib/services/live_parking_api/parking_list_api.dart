@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'package:live_parking_guide/features/live_parking/models/parking_list_data.dart';
 
 class ParkingListApi {
+  static const String _authority = 'data.stad.gent';
+  static const String _unencodedPaths = '/api/records/1.0/search/';
+
   Future<List<ParkingListData>> requestParkingList(
       {Position? refreshPosition}) async {
     late Uri _uri;
@@ -16,21 +19,21 @@ class ParkingListApi {
     }
 
     if (_latitude != null && _longitude != null) {
-      _uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
+      _uri = Uri.https(_authority, _unencodedPaths, {
         "dataset": "bezetting-parkeergarages-real-time",
         "rows": "20",
         "start": "0",
         "format": "json",
+        "timezone": "UTC",
         "geofilter.distance": [
           "51.040271, 3.724234, 5000"
-        ], //TODO: testing only, delete at the end
+        ] //TODO: testing only, delete at the end
         //"geofilter.distance": ["$_latitude, $_longitude, 5000"],
-        "timezone": "UTC"
       });
 
       return await _apiRequest(uri: _uri, locationEnabled: true);
     } else {
-      _uri = Uri.https('data.stad.gent', '/api/records/1.0/search/', {
+      _uri = Uri.https(_authority, _unencodedPaths, {
         "dataset": "bezetting-parkeergarages-real-time",
         "rows": "20",
         "start": "0",

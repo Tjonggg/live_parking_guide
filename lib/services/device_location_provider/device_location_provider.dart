@@ -1,15 +1,21 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class DeviceLocationProvider extends ChangeNotifier {
+class DeviceLocationProvider {
+  static const int _refreshDistance = 2;
+
   Position? _refreshPosition;
   Position? _position;
-  Position? get position => _position;
 
-  // ignore: unused_field
+  // ignore: TODO: create getter to handle stream, unused_local_variable
+  late final StreamSubscription<Position> positionStream;
+
+  final StreamController<Position> _refreshPositionStreamController =
+      StreamController<Position>();
+  Stream<Position> get refreshPositionStream =>
+      _refreshPositionStreamController.stream;
 
   Future<void> initDeviceLocationProvider() async {
     final permissionStatus = await Permission.location.status;
@@ -36,20 +42,17 @@ class DeviceLocationProvider extends ChangeNotifier {
   }
 
   void _startLocationListener() {
-    // ignore: TODO: create getter to handle stream, unused_local_variable
-    final StreamSubscription<Position> _positionStream;
     double _distance;
 
-    _positionStream = Geolocator.getPositionStream(
+    positionStream = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
     ).listen(
       (position) {
         _distance = Geolocator.distanceBetween(_refreshPosition!.latitude,
             _refreshPosition!.longitude, position.latitude, position.longitude);
-        if (_distance > 2) {
-          _position = position;
+        if (_distance > _refreshDistance) {
+          _refreshPositionStreamController.add(position);
           _refreshPosition = position;
-          notifyListeners();
         }
       },
     );

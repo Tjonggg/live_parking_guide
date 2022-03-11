@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:live_parking_guide/features/live_parking/controllers/parking_list_controller.dart';
 import 'package:live_parking_guide/features/live_parking/models/parking_list_data.dart';
@@ -7,6 +5,7 @@ import 'package:live_parking_guide/features/live_parking/parking_list/widgets/pa
 
 class ParkingListScreen extends StatelessWidget {
   static const String id = 'Parking_list_screen';
+
   const ParkingListScreen({Key? key}) : super(key: key);
 
   @override
@@ -37,17 +36,10 @@ class _ListBuilder extends StatelessWidget {
     final ParkingListController _parkingListController =
         ParkingListController();
 
-    final StreamController<List<ParkingListData>> _parkingListStreamController =
-        StreamController<List<ParkingListData>>();
-
-    _parkingListController.addListener(() {
-      _parkingListStreamController.add(_parkingListController.parkingList!);
-    });
-
     _parkingListController.initParkingList();
 
     return StreamBuilder(
-      stream: _parkingListStreamController.stream,
+      stream: _parkingListController.getParkingListStream,
       builder: (context, AsyncSnapshot<List<ParkingListData>> snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
