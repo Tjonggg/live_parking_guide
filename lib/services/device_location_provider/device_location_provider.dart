@@ -4,9 +4,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DeviceLocationProvider {
-  static const int _refreshDistance = 2;
+  static const int _refreshDistance = 3;
 
   Position? _refreshPosition;
+  Position? get refreshPosition => _refreshPosition;
   Position? _position;
 
   // ignore: TODO: create getter to handle stream, unused_local_variable
@@ -50,6 +51,7 @@ class DeviceLocationProvider {
       (position) {
         _distance = Geolocator.distanceBetween(_refreshPosition!.latitude,
             _refreshPosition!.longitude, position.latitude, position.longitude);
+        print(_distance);
         if (_distance > _refreshDistance) {
           _refreshPositionStreamController.add(position);
           _refreshPosition = position;

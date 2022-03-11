@@ -5,6 +5,9 @@ import 'package:live_parking_guide/services/device_location_provider/device_loca
 import 'package:live_parking_guide/services/live_parking_api/parking_list_api.dart';
 
 class ParkingListController {
+  static const int _refreshInterval = 5;
+  late Timer _refreshTimer;
+
   List<ParkingListData> _parkingList = [];
   List<ParkingListData>? get parkingList => _parkingList;
 
@@ -24,13 +27,28 @@ class ParkingListController {
   }
 
   void _refreshParkingList() {
+    _startTimer();
     _deviceLocationProvider.initDeviceLocationProvider();
-    _deviceLocationProvider.refreshPositionStream.listen((position) async {
-      _parkingList =
-          await ParkingListApi().requestParkingList(refreshPosition: position);
-      _getParkingListStreamController.add(_parkingList);
-    });
+    _deviceLocationProvider.refreshPositionStream.listen(
+      (position) async {
+        _refreshTimer.cancel();
+        _parkingList = await ParkingListApi()
+            .requestParkingList(refreshPosition: position);
+        _getParkingListStreamController.add(_parkingList);
+        print('location refresh'); //TODO: delete this
+        _startTimer();
+      },
+    );
+  }
 
-    //TODO: add timer refresh
+  void _startTimer() {
+    _refreshTimer = Timer.periodic(
+      const Duration(seconds: _refreshInterval),
+      (timer) async {
+        _parkingList = await ParkingListApi().requestParkingList(
+            refreshPosition: _deviceLocationProvider.refreshPosition);
+        _getParkingListStreamController.add(_parkingList);
+      },
+    );
   }
 }
