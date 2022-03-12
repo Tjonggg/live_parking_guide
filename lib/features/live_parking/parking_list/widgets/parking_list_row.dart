@@ -38,7 +38,6 @@ class ParkingListRow extends StatelessWidget {
           textAlign: TextAlign.right,
         ),
         onTap: () {
-          //TODO: stop timer en locatie listener (override dispose)
           Navigator.pushNamed(context, ParkingDetailsScreen.id,
               arguments: details);
         },

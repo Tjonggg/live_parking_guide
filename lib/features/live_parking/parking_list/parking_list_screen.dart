@@ -2,11 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:live_parking_guide/features/live_parking/controllers/parking_list_controller.dart';
 import 'package:live_parking_guide/features/live_parking/models/parking_list_data.dart';
 import 'package:live_parking_guide/features/live_parking/parking_list/widgets/parking_list_row.dart';
+import 'package:live_parking_guide/main.dart';
 
-class ParkingListScreen extends StatelessWidget {
+class ParkingListScreen extends StatefulWidget {
   static const String id = 'Parking_list_screen';
 
   const ParkingListScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ParkingListScreen> createState() => _ParkingListScreenState();
+}
+
+class _ParkingListScreenState extends State<ParkingListScreen> with RouteAware {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPushNext() {
+    //DeviceLocationProvider().positionStream!.cancel();
+    ParkingListController.refreshTimer!.cancel();
+    print('didPushNext');
+  }
+
+  @override
+  void didPopNext() {
+    ParkingListController().startTimer();
+    print('didPopNext');
+  }
 
   @override
   Widget build(BuildContext context) {

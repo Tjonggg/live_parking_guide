@@ -7,6 +7,8 @@ void main() {
   runApp(const MyApp());
 }
 
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -18,6 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      navigatorObservers: [routeObserver],
       home: const ParkingListScreen(),
       routes: {
         ParkingListScreen.id: (context) => const ParkingListScreen(),
