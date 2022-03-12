@@ -45,7 +45,7 @@ class ParkingListController {
       const Duration(seconds: _refreshInterval),
       (timer) async {
         _parkingList = await ParkingListApi().requestParkingList(
-            refreshPosition: _deviceLocationProvider.refreshPosition);
+            refreshPosition: DeviceLocationProvider.refreshPosition);
         _getParkingListStreamController.add(_parkingList);
       },
     );

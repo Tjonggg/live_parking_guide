@@ -3,6 +3,7 @@ import 'package:live_parking_guide/features/live_parking/controllers/parking_lis
 import 'package:live_parking_guide/features/live_parking/models/parking_list_data.dart';
 import 'package:live_parking_guide/features/live_parking/parking_list/widgets/parking_list_row.dart';
 import 'package:live_parking_guide/main.dart';
+import 'package:live_parking_guide/services/device_location_provider/device_location_provider.dart';
 
 class ParkingListScreen extends StatefulWidget {
   static const String id = 'Parking_list_screen';
@@ -28,15 +29,15 @@ class _ParkingListScreenState extends State<ParkingListScreen> with RouteAware {
 
   @override
   void didPushNext() {
-    //DeviceLocationProvider().positionStream!.cancel();
+    DeviceLocationProvider.positionStream!.cancel();
     ParkingListController.refreshTimer!.cancel();
-    print('didPushNext');
   }
 
   @override
   void didPopNext() {
     ParkingListController().startTimer();
-    print('didPopNext');
+    DeviceLocationProvider().startLocationListener(
+        refreshPostion: DeviceLocationProvider.refreshPosition!);
   }
 
   @override
